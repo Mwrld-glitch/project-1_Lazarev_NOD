@@ -28,9 +28,9 @@ def move_player(game_state, direction):
         next_room = room_data['exits'][direction]
         
         # Проверка для treasure_room
-        has_key = 'rusty_key' not in game_state['player_inventory']
-        if next_room == 'treasure_room' and has_key:
-            print("Дверь заперта. Нужен ключ, чтобы пройти дальше.")
+        if next_room == 'treasure_room' \
+        and 'rusty_key' not in game_state['player_inventory']:
+            print("Дверь заперта. Нужен rusty_key чтобы пройти дальше.")
             return
         
         if next_room == 'treasure_room':
@@ -40,10 +40,10 @@ def move_player(game_state, direction):
         game_state['steps_taken'] += 1
         
         # Случайное событие после перемещения
-        from utils import random_event
+        from .utils import random_event
         random_event(game_state)
         
-        from utils import describe_current_room
+        from .utils import describe_current_room
         describe_current_room(game_state)
     else:
         print("Нельзя пойти в этом направлении.")
@@ -73,12 +73,8 @@ def use_item(game_state, item_name):
     elif item_name == 'sword':
         print("Вы чувствуете уверенность с мечом в руках.")
     elif item_name == 'bronze_box':
-        if 'rusty_key' not in game_state['player_inventory']:
-            game_state['player_inventory'].append('rusty_key')
-            print("Вы открыли шкатулку и нашли rusty_key!")
-        else:
-            print("Шкатулка пуста.")
-    elif item_name == 'mechanism_key':
-        print("Этот ключ уже использован для разблокировки.")
+        print("Вы открыли шкатулку и нашли treasure_key!")
+        game_state['player_inventory'].append('treasure_key')
+        game_state['player_inventory'].remove('bronze_box')
     else:
         print("Вы не знаете, как это использовать.")
