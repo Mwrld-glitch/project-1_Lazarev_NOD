@@ -34,11 +34,34 @@ def solve_puzzle(game_state):
     print(question)
     user_answer = get_input("Ваш ответ: ")
     
-    if user_answer == answer:
+    # Проверка альтернативных вариантов ответа
+    correct_answers = [answer]
+    if answer == '10':
+        correct_answers.extend(['десять', '10'])
+    elif answer == 'молчание':
+        correct_answers.extend(['тишина', 'silence'])
+    elif answer == 'резонанс':
+        correct_answers.extend(['эхо', 'echo'])
+    elif answer == 'шаг шаг шаг':
+        correct_answers.extend(['step step step', 'steps'])
+    
+    if user_answer in correct_answers:
         print("Верно! Загадка решена.")
         room_data['puzzle'] = None
+        
+        # Награда в зависимости от комнаты
+        if current_room == 'guard_room':
+            print("Страж-скелет пропускает вас!")
+        elif current_room == 'trap_room':
+            print("Система плит деактивирована! Теперь можно взять rusty_key.")
+        elif current_room == 'puzzle_chamber':
+            print("Механизм разблокирован! Теперь можно безопасно перемещаться.")
+        elif current_room == 'library':
+            print("Вы нашли скрытый отсек с древним свитком!")
+            
     else:
         print("Неверно. Попробуйте снова.")
+        # Ловушка в trap_room при неверном ответе
         if current_room == 'trap_room':
             trigger_trap(game_state)
 

@@ -2,7 +2,7 @@
 name = "project-1-lazarev-nod"
 version = "0.1.0"
 description = ""
-authors = ["Lazarev Victor<loba4evskogo@gmai.com>"]
+authors = ["Lazarev Victor <loba4evskogo@gmail.com>"]
 
 [tool.poetry.scripts]
 project = "labyrinth_game.main:main"
