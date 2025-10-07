@@ -77,23 +77,26 @@ def trigger_trap(game_state):
     print("Ловушка активирована! Пол стал дрожать...")
     
     inventory = game_state['player_inventory']
+    
     if inventory:
-        index = pseudo_random(game_state['steps_taken'], len(inventory))
-        lost_item = inventory.pop(index)
-        print(f"Вы потеряли: {lost_item}")
+        # Удаляем случайный предмет
+        item_index = pseudo_random(game_state['steps_taken'], len(inventory))
+        lost_item = inventory.pop(item_index)
+        print(f"Из вашего инвентаря выпал: {lost_item}")
     else:
-        result = pseudo_random(game_state['steps_taken'], 10)
-        if result < 3:
+        # Урон при пустом инвентаре
+        damage_roll = pseudo_random(game_state['steps_taken'], 10)
+        if damage_roll < 3:  # 30% шанс смерти
             print("Ловушка сработала! Игра окончена.")
             game_state['game_over'] = True
         else:
             print("Вам повезло, вы избежали ловушки.")
 
-
 def random_event(game_state):
     """Случайное событие при перемещении"""
-    if pseudo_random(game_state['steps_taken'], 10) == 0:
-        event_type = pseudo_random(game_state['steps_taken'], 3)
+    EVENT_PROBABILITY = 10
+    if pseudo_random(game_state['steps_taken'], EVENT_PROBABILITY) == 0:
+        event_type = pseudo_random(game_state['steps_taken'] + 100, 3)
         
         if event_type == 0:
             print("Вы нашли на полу монетку!")
@@ -104,11 +107,10 @@ def random_event(game_state):
             if 'sword' in game_state['player_inventory']:
                 print("Вы отпугнули существо мечом.")
         elif event_type == 2:
-            current = game_state['current_room']
-            if current == 'trap_room' and 'torch' not in game_state['player_inventory']:
+            # Ловушка срабатывает в ЛЮБОЙ комнате без факела
+            if 'torch' not in game_state['player_inventory']:
                 print("Опасность! Ловушка активирована!")
                 trigger_trap(game_state)
-
 
 def show_help():
     """Показать справку по командам"""

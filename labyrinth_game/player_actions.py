@@ -27,6 +27,13 @@ def move_player(game_state, direction):
     if direction in room_data['exits']:
         next_room = room_data['exits'][direction]
         
+        # Проверка для guard_room - страж не выпускает
+        if current_room == 'guard_room' and next_room == 'hall' \
+        and room_data['puzzle'] is not None:
+            print("Страж-скелет скрежещет костями и не пропускает тебя!")
+            print("Придется решить его загадку командой 'solve'.")
+            return
+
         # Проверка для treasure_room
         if next_room == 'treasure_room' \
         and 'rusty_key' not in game_state['player_inventory']:
